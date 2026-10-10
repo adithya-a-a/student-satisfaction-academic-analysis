@@ -1,0 +1,92 @@
+CREATE DATABASE student_analysis;
+
+USE student_analysis;
+
+SELECT * FROM student;
+
+-- Average CGPA 
+SELECT ROUND(AVG(cgpa), 2) AS average_cgpa
+FROM student;
+
+-- Average CGPA by department 
+SELECT
+    department,
+    ROUND(AVG(cgpa), 2) AS average_cgpa
+FROM student
+GROUP BY department
+ORDER BY average_cgpa DESC;
+
+-- Average attendance by department
+
+SELECT
+    department,
+    ROUND(AVG(attendance_percentage), 2) AS avg_attendance
+FROM student
+GROUP BY department
+ORDER BY avg_attendance DESC;
+
+-- Students with CGPA above 8.5
+
+ SELECT
+    student_id,
+    department,
+    cgpa,
+    attendance_percentage
+FROM student
+WHERE cgpa > 8.5
+ORDER BY cgpa DESC;
+
+-- AI usage distribution
+ 
+SELECT
+    ai_usage_frequency,
+    COUNT(*) AS student_count
+FROM student
+GROUP BY ai_usage_frequency
+ORDER BY student_count DESC;
+
+-- Department performance ranking 
+
+SELECT
+    department,
+    ROUND(AVG(cgpa), 2) AS avg_cgpa,
+    RANK() OVER (
+        ORDER BY AVG(cgpa) DESC
+    ) AS performance_rank
+FROM student
+GROUP BY department;
+
+-- Find students with high attendance but low CGPA
+
+SELECT
+    student_id,
+    department,
+    attendance_percentage,
+    cgpa
+FROM student
+WHERE attendance_percentage >= 85
+AND cgpa < 7;
+
+
+-- Identify high-performing students
+
+SELECT
+    student_id,
+    department,
+    cgpa,
+    study_hours_per_day,
+    attendance_percentage
+FROM student
+WHERE cgpa >= 8.5
+ORDER BY cgpa DESC;
+
+-- AI users vs non-users
+
+SELECT
+    ai_usage_frequency,
+    ROUND(AVG(cgpa), 2) AS avg_cgpa,
+    ROUND(AVG(satisfaction_score), 2) AS avg_satisfaction
+FROM student
+GROUP BY ai_usage_frequency
+ORDER BY avg_cgpa DESC;
+
